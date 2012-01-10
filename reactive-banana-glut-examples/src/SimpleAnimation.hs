@@ -133,9 +133,3 @@ main = do
         reactimate $ drawGLScene <$> erepaint
     actuate network
     mainLoop
-
-eventPrint :: String -> Int -> IO()
-eventPrint s i = do
-    print s
-    print i
-
