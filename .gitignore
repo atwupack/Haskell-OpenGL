@@ -1,0 +1,4 @@
+*.lkshs
+*.lkshw
+dist/
+*.swp
