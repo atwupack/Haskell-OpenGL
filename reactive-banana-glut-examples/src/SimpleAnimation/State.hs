@@ -35,11 +35,9 @@ data AnimationState = AnimationState {
     }
 
 calcRotation :: AnimationState -> Int -> AnimationState
-calcRotation as time = AnimationState {
+calcRotation as time = as {
     rtri = rtri as + fromIntegral (time - lastTime as) * 360.0 / fromIntegral mstri,
-    stri = stri as,
     rcube = rcube as + fromIntegral (time - lastTime as) * 360.0 / fromIntegral mscube,
-    scube = scube as,
     lastTime = time
     }
     where
@@ -48,14 +46,14 @@ calcRotation as time = AnimationState {
 
 decTriangle :: AnimationState -> AnimationState
 decTriangle as@(AnimationState _ 1 _ _ _) = as
-decTriangle (AnimationState rt st rc sc t) = AnimationState rt (st-1) rc sc t
+decTriangle as = as { stri = stri as - 1 }
 
 incTriangle :: AnimationState -> AnimationState
-incTriangle (AnimationState rt st rc sc t) = AnimationState rt (st+1) rc sc t
+incTriangle as = as { stri = stri as + 1 }
 
 decCube :: AnimationState -> AnimationState
 decCube as@(AnimationState _ _ _ 1 _) = as
-decCube (AnimationState rt st rc sc t) = AnimationState rt st rc (sc-1) t
+decCube as = as { scube = scube as - 1 }
 
 incCube :: AnimationState -> AnimationState
-incCube (AnimationState rt st rc sc t) = AnimationState rt st rc (sc+1) t
+incCube as = as { scube = scube as + 1 }
