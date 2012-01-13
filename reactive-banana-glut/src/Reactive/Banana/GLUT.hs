@@ -17,8 +17,7 @@ module Reactive.Banana.GLUT (
     displayEvent,
     idleEvent,
     event0,event1,event4,
-    time,
-    filterInc
+    time
 ) where
 
 import Reactive.Banana
@@ -92,11 +91,6 @@ idleEvent = event0 idleCallback
 time :: NetworkDescription (Behavior Int)
 time = fromPoll $ get elapsedTime
 
-filterInc :: (Num a, Ord a) => Event a -> a -> Event a
-filterInc e inc = result
-    where
-        result = filterApply ((\l n -> n >= l + inc) <$> last) e
-        last =  stepper (fromInteger 0) result
 
 
 

@@ -6,8 +6,8 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: GLUT -any, OpenGL -any, base -any,
-               reactive-banana -any, reactive-banana-glut -any
+build-depends: GLUT >=2.2, OpenGL >=2.4, base >=3 && <5,
+               reactive-banana >=0.4.3, reactive-banana-glut -any
 stability:
 homepage:
 package-url:
@@ -23,7 +23,7 @@ extra-source-files:
 extra-tmp-files:
  
 executable: RBG-SimpleAnimation
-main-is: SimpleAnimation.hs
+main-is: SimpleAnimation/Main.hs
 buildable: True
 build-tools:
 cpp-options:
@@ -43,7 +43,7 @@ includes:
 install-includes:
 include-dirs:
 hs-source-dirs: src
-other-modules:
+other-modules: SimpleAnimation.State
 ghc-prof-options:
 ghc-shared-options:
 ghc-options:

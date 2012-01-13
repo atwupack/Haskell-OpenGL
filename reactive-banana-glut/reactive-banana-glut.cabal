@@ -6,8 +6,8 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: GLUT -any, StateVar -any, base -any,
-               reactive-banana -any
+build-depends: GLUT >=2.2, StateVar -any, base >=3 && <5,
+               reactive-banana >=0.4.3
 stability:
 homepage:
 package-url:
@@ -21,7 +21,8 @@ data-files:
 data-dir: ""
 extra-source-files:
 extra-tmp-files:
-exposed-modules: Reactive.Banana.GLUT Reactive.Banana.GLUT.Input
+exposed-modules: Reactive.Banana.GLUT.Util Reactive.Banana.GLUT
+                 Reactive.Banana.GLUT.Input
 exposed: True
 buildable: True
 build-tools:
