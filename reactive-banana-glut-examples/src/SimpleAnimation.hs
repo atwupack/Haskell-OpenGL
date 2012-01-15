@@ -5,7 +5,9 @@ import Reactive.Banana
 import Reactive.Banana.GLUT
 import Reactive.Banana.GLUT.Input
 import Reactive.Banana.GLUT.Util
+import Reactive.Banana.GLUT.Window
 import SimpleAnimation.State
+import SimpleAnimation.Objects
 
 -- Callback for reshapeCallback
 resizeGLScene :: Size -> IO ()
@@ -19,80 +21,23 @@ resizeGLScene size@(Size width height) = do
     loadIdentity
 
 -- Callback for displayCallback
-drawGLScene :: AnimationState -> IO ()
-drawGLScene state = do
-
+drawGLScene :: AnimObjects -> AnimationState -> IO ()
+drawGLScene objects state = do
     clear [ColorBuffer, DepthBuffer]
     loadIdentity
     translate $ Vector3 (-1.5) 0.0 ((-6.0) :: GLfloat)
     rotate (rtri state) (Vector3 0.0 1.0 (0.0 :: GLfloat))
-    renderPrimitive Triangles $ do
-        -- front face
-        color $ Color3 1.0 0.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 0.0 1.0 (0.0 :: GLfloat)
-        color $ Color3 0.0 1.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) (1.0 :: GLfloat)
-        color $ Color3 0.0 0.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) (1.0 :: GLfloat)
-        -- right face
-        color $ Color3 1.0 0.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 0.0 1.0 (0.0 :: GLfloat)
-        color $ Color3 0.0 0.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) (1.0 :: GLfloat)
-        color $ Color3 0.0 1.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) ((-1.0) :: GLfloat)
-        -- back face
-        color $ Color3 1.0 0.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 0.0 1.0 (0.0 :: GLfloat)
-        color $ Color3 0.0 1.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) ((-1.0) :: GLfloat)
-        color $ Color3 0.0 0.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) ((-1.0) :: GLfloat)
-        -- left face
-        color $ Color3 1.0 0.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 0.0 1.0 (0.0 :: GLfloat)
-        color $ Color3 0.0 0.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) ((-1.0) :: GLfloat)
-        color $ Color3 0.0 1.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) (1.0 :: GLfloat)
+    callList $ pyramid objects
     loadIdentity
     translate $ Vector3 1.5 (0.0) ((-7.0) :: GLfloat)
     rotate (rcube state) (Vector3 1.0 1.0 (1.0 :: GLfloat))
-    renderPrimitive Quads $ do
-        color $ Color3 0.0 1.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 1.0 1.0 ((-1.0) :: GLfloat)
-        vertex $ Vertex3 (-1.0) 1.0 ((-1.0) :: GLfloat)
-        vertex $ Vertex3 (-1.0) 1.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 1.0 1.0 (1.0 :: GLfloat)
-        color $ Color3 1.0 0.5 (0.0 :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) (1.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) (1.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) ((-1.0) :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) ((-1.0) :: GLfloat)
-        color $ Color3 1.0 0.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 1.0 1.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) 1.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) (1.0 :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) (1.0 :: GLfloat)
-        color $ Color3 1.0 1.0 (0.0 :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) ((-1.0) :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) ((-1.0) :: GLfloat)
-        vertex $ Vertex3 (-1.0) 1.0 ((-1.0) :: GLfloat)
-        vertex $ Vertex3 1.0 1.0 ((-1.0) :: GLfloat)
-        color $ Color3 0.0 0.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) 1.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 (-1.0) 1.0 ((-1.0) :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) ((-1.0) :: GLfloat)
-        vertex $ Vertex3 (-1.0) (-1.0) (1.0 :: GLfloat)
-        color $ Color3 1.0 0.0 (1.0 :: GLfloat)
-        vertex $ Vertex3 1.0 1.0 ((-1.0) :: GLfloat)
-        vertex $ Vertex3 1.0 1.0 (1.0	 :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) (1.0 :: GLfloat)
-        vertex $ Vertex3 1.0 (-1.0) ((-1.0) :: GLfloat)
+    callList $ cube objects
     swapBuffers
 
 createGLWindow :: String -> GLsizei -> GLsizei -> Bool -> IO ()
 createGLWindow windowTitle width height fullscreen = do
+    initialDisplayMode $= [DoubleBuffered, RGBAMode,
+        WithDepthBuffer,WithStencilBuffer, WithAlphaComponent]
     createWindow windowTitle
     windowSize $= Size width height
     actionOnWindowClose $= Exit
@@ -110,6 +55,7 @@ main = do
     getArgsAndInitialize
     createGLWindow "Test" 640 480 False
     initGL
+    objects <- createObjects
     network <- compile $ do
         btime <- time
         ekeymouse <- keyMouseEvent
@@ -124,6 +70,7 @@ main = do
             ef3 = noModifier $ keyPressed (SpecialKey KeyF3) ekeymouse
             ef4 = noModifier $ keyPressed (SpecialKey KeyF4) ekeymouse
             ef5 = noModifier $ keyPressed (SpecialKey KeyF5) ekeymouse
+            ekeyp = noModifier $ keyPressed (Char 'p') ekeymouse
 
             -- idle event every 15ms containing current time
             eidletick = filterInc (apply (const <$> btime) eidle) 15
@@ -138,11 +85,13 @@ main = do
             einccube = injectB (incCube <$> bstate) ef4
             edeccube = injectB (decCube <$> bstate) ef5
             eanim = apply (calcRotation <$> bstate) erepaint
+            epause = injectB (switchPause <$> bstate) ekeyp
 
             -- combine all state changing events
             estatechanged = eanim
                 `union` einctri `union` edectri
                 `union` einccube `union` edeccube
+                `union` epause
             -- behavior with current state
             bstate = stepper state estatechanged
 
@@ -150,7 +99,7 @@ main = do
         reactimate $ leaveMainLoop <$ eesc
         reactimate $ resizeGLScene <$> ereshape
         -- redraw the scene because of changed state
-        reactimate $ drawGLScene <$> estatechanged
+        reactimate $ drawGLScene objects <$> estatechanged
     actuate network
     mainLoop
     where
@@ -159,7 +108,8 @@ main = do
             stri = 5,
             rcube = 0.0,
             scube = 3,
-            lastTime = 0
+            lastTime = 0,
+            paused = False
         }
 
 

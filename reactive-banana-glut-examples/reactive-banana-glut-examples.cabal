@@ -6,11 +6,8 @@ license: AllRightsReserved
 license-file: ""
 copyright:
 maintainer:
-build-depends: GLUT >=2.2,
-               OpenGL >=2.4,
-               base >=3 && <5,
-               reactive-banana >=0.4.3,
-               reactive-banana-glut -any
+build-depends: reactive-banana-glut -any, reactive-banana >=0.4.3,
+               base >=3 && <5, OpenGL >=2.4, GLUT >=2.2
 stability:
 homepage:
 package-url:
@@ -46,7 +43,7 @@ includes:
 install-includes:
 include-dirs:
 hs-source-dirs: src
-other-modules: SimpleAnimation.State
+other-modules: SimpleAnimation.Objects SimpleAnimation.State
 ghc-prof-options:
 ghc-shared-options:
 ghc-options:

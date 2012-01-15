@@ -13,7 +13,6 @@
 -----------------------------------------------------------------------------
 
 module Reactive.Banana.GLUT (
-    reshapeEvent,
     displayEvent,
     idleEvent,
     event0,event1,event4,
@@ -67,9 +66,6 @@ event0 callbackVar = do
     addHandler <- liftIO $ addHandler0 callbackVar
     fromAddHandler addHandler
 
-
-reshapeEvent :: NetworkDescription (Event Size)
-reshapeEvent = event1 reshapeCallback
 
 setDisplayHandler :: (() -> IO()) -> IO()
 setDisplayHandler callback = do

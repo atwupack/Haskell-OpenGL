@@ -21,7 +21,8 @@ data-files:
 data-dir: ""
 extra-source-files:
 extra-tmp-files:
-exposed-modules: Reactive.Banana.GLUT.Util Reactive.Banana.GLUT
+exposed-modules: Reactive.Banana.GLUT.Window
+                 Reactive.Banana.GLUT.Util Reactive.Banana.GLUT
                  Reactive.Banana.GLUT.Input
 exposed: True
 buildable: True
