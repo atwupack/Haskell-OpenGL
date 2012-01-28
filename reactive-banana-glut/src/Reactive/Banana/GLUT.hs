@@ -24,8 +24,7 @@ import Graphics.UI.GLUT
 import Data.StateVar
 
 addHandler4 :: SettableStateVar (Maybe (a -> b -> c -> d -> IO())) -> IO (AddHandler (a,b,c,d))
-addHandler4 callbackVar = do
-    return addHandler
+addHandler4 callbackVar = return addHandler
     where
         addHandler callback = do
             callbackVar $= Just iCallback
@@ -39,8 +38,7 @@ event4 callbackVar = do
     fromAddHandler addHandler
 
 addHandler1 :: SettableStateVar (Maybe (a -> IO())) -> IO (AddHandler a)
-addHandler1 callbackVar = do
-    return addHandler
+addHandler1 callbackVar = return addHandler
     where
         addHandler callback = do
             callbackVar $= Just callback
@@ -52,8 +50,7 @@ event1 callbackVar = do
     fromAddHandler addHandler
 
 addHandler0 :: SettableStateVar (Maybe (IO())) -> IO (AddHandler ())
-addHandler0 callbackVar = do
-    return addHandler
+addHandler0 callbackVar = return addHandler
     where
         addHandler callback = do
             callbackVar $= Just iCallback
@@ -68,15 +65,14 @@ event0 callbackVar = do
 
 
 setDisplayHandler :: (() -> IO()) -> IO()
-setDisplayHandler callback = do
-    displayCallback $= iCallback
+setDisplayHandler callback = displayCallback $= iCallback
     where
         iCallback :: IO()
         iCallback = callback ()
 
 displayEvent :: NetworkDescription (Event ())
 displayEvent = do
-    (addHandler, runHandlers) <- liftIO $ newAddHandler
+    (addHandler, runHandlers) <- liftIO newAddHandler
     liftIO $ setDisplayHandler runHandlers
     fromAddHandler addHandler
 

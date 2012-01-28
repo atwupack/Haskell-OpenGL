@@ -26,7 +26,7 @@ filterInc :: (Num a, Ord a) => Event a -> a -> Event a
 filterInc e inc = result
     where
         result = filterApply ((\l n -> n >= l + inc) <$> last) e
-        last =  stepper (fromInteger 0) result
+        last =  stepper 0 result
 
 injectB :: Behavior a -> Event b -> Event a
-injectB be ev = apply (const <$> be) ev
+injectB be = apply (const <$> be)

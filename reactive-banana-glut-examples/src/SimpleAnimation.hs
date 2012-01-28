@@ -8,10 +8,11 @@ import Reactive.Banana.GLUT.Util
 import Reactive.Banana.GLUT.Window
 import SimpleAnimation.State
 import SimpleAnimation.Objects
+import Control.Monad
 
 -- Callback for reshapeCallback
 resizeGLScene :: Size -> IO ()
-resizeGLScene (Size width 0) = do resizeGLScene (Size width 1)
+resizeGLScene (Size width 0) = resizeGLScene (Size width 1)
 resizeGLScene size@(Size width height) = do
     viewport $= (Position 0 0, size)
     matrixMode $= Projection
@@ -29,7 +30,7 @@ drawGLScene objects state = do
     rotate (rtri state) (Vector3 0.0 1.0 (0.0 :: GLfloat))
     callList $ pyramid objects
     loadIdentity
-    translate $ Vector3 1.5 (0.0) ((-7.0) :: GLfloat)
+    translate $ Vector3 1.5 0.0 ((-7.0) :: GLfloat)
     rotate (rcube state) (Vector3 1.0 1.0 (1.0 :: GLfloat))
     callList $ cube objects
     swapBuffers
@@ -41,11 +42,11 @@ createGLWindow windowTitle width height fullscreen = do
     createWindow windowTitle
     windowSize $= Size width height
     actionOnWindowClose $= Exit
-    if fullscreen then fullScreen else return ()
+    when fullscreen fullScreen
 
 initGL = do
     shadeModel $= Smooth
-    clearColor $= (Color4 0.0 0.0 0.0 0.0)
+    clearColor $= Color4 0.0 0.0 0.0 0.0
     clearDepth $= 1.0
     depthFunc $= Just Lequal
     hint PerspectiveCorrection $= Nicest

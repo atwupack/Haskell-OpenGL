@@ -29,7 +29,7 @@ keyPressed :: Key -> Event KeyMouseInfo -> Event KeyMouseInfo
 keyPressed key event = filterE iFilter event
     where
         iFilter :: KeyMouseInfo -> Bool
-        iFilter (k,Down,_,_) = (k == key)
+        iFilter (k,Down,_,_) = k==key
         iFilter (_,_,_,_) = False
 
 noModifier :: Event KeyMouseInfo -> Event KeyMouseInfo
@@ -42,5 +42,5 @@ withModifiers :: Modifiers -> Event KeyMouseInfo -> Event KeyMouseInfo
 withModifiers mods event = filterE iFilter event
     where
         iFilter :: KeyMouseInfo -> Bool
-        iFilter (_,_,m,_) = (m==mods)
+        iFilter (_,_,m,_) = m==mods
 

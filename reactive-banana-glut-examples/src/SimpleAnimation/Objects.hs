@@ -18,9 +18,9 @@ import Graphics.Rendering.OpenGL
 
 data AnimObjects = AnimObjects { pyramid :: DisplayList, cube :: DisplayList }
 
-createObjects :: IO (AnimObjects)
+createObjects :: IO AnimObjects
 createObjects = do
-    pyrlist <- defineNewList Compile $ do
+    pyrlist <- defineNewList Compile $
         renderPrimitive Triangles $ do
             -- front face
             color $ Color3 1.0 0.0 (0.0 :: GLfloat)
@@ -51,7 +51,7 @@ createObjects = do
             color $ Color3 0.0 1.0 (0.0 :: GLfloat)
             vertex $ Vertex3 (-1.0) (-1.0) (1.0 :: GLfloat)
 
-    cubelist <- defineNewList Compile $ do
+    cubelist <- defineNewList Compile $
         renderPrimitive Quads $ do
             color $ Color3 0.0 1.0 (0.0 :: GLfloat)
             vertex $ Vertex3 1.0 1.0 ((-1.0) :: GLfloat)
