@@ -1,53 +1,18 @@
 name: reactive-banana-glut
-version: 0.0.1
-cabal-version: -any
+version: 0.0.2
+cabal-version: >=1.2
 build-type: Simple
 license: AllRightsReserved
 license-file: ""
-copyright:
-maintainer:
-build-depends: GLUT >=2.2, StateVar -any, base >=3 && <5,
-               reactive-banana >=0.4.3
-stability:
-homepage:
-package-url:
-bug-reports:
-synopsis:
 description: .
-category:
-author:
-tested-with:
-data-files:
 data-dir: ""
-extra-source-files:
-extra-tmp-files:
-exposed-modules: Reactive.Banana.GLUT.Window
-                 Reactive.Banana.GLUT.Util Reactive.Banana.GLUT
-                 Reactive.Banana.GLUT.Input
-exposed: True
-buildable: True
-build-tools:
-cpp-options:
-cc-options:
-ld-options:
-pkgconfig-depends:
-frameworks:
-c-sources:
-default-language:
-other-languages:
-default-extensions:
-other-extensions:
-extensions:
-extra-libraries:
-extra-lib-dirs:
-includes:
-install-includes:
-include-dirs:
-hs-source-dirs: src
-other-modules:
-ghc-prof-options:
-ghc-shared-options:
-ghc-options:
-hugs-options:
-nhc98-options:
-jhc-options:
+ 
+library
+    build-depends: GLUT >=2.3, StateVar -any, base >=3 && <5,
+                   reactive-banana >=0.5
+    exposed-modules: Reactive.Banana.GLUT Reactive.Banana.GLUT.Input
+                     Reactive.Banana.GLUT.Util Reactive.Banana.GLUT.Window
+    exposed: True
+    buildable: True
+    hs-source-dirs: src
+ 

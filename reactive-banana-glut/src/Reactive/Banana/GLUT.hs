@@ -32,7 +32,7 @@ addHandler4 callbackVar = return addHandler
             where
                 iCallback p1 p2 p3 p4 = callback (p1,p2,p3,p4)
 
-event4 :: SettableStateVar (Maybe (a -> b -> c -> d -> IO())) -> NetworkDescription (Event (a,b,c,d))
+event4 :: SettableStateVar (Maybe (a -> b -> c -> d -> IO())) -> NetworkDescription t (Event t (a,b,c,d))
 event4 callbackVar = do
     addHandler <- liftIO $ addHandler4 callbackVar
     fromAddHandler addHandler
@@ -44,7 +44,7 @@ addHandler1 callbackVar = return addHandler
             callbackVar $= Just callback
             return (callbackVar $= Nothing)
 
-event1 :: SettableStateVar (Maybe (a -> IO())) -> NetworkDescription (Event a)
+event1 :: SettableStateVar (Maybe (a -> IO())) -> NetworkDescription t (Event t a)
 event1 callbackVar = do
     addHandler <- liftIO $ addHandler1 callbackVar
     fromAddHandler addHandler
@@ -58,7 +58,7 @@ addHandler0 callbackVar = return addHandler
             where
                 iCallback = callback ()
 
-event0 :: SettableStateVar (Maybe (IO())) -> NetworkDescription (Event ())
+event0 :: SettableStateVar (Maybe (IO())) -> NetworkDescription t (Event t ())
 event0 callbackVar = do
     addHandler <- liftIO $ addHandler0 callbackVar
     fromAddHandler addHandler
@@ -70,17 +70,17 @@ setDisplayHandler callback = displayCallback $= iCallback
         iCallback :: IO()
         iCallback = callback ()
 
-displayEvent :: NetworkDescription (Event ())
+displayEvent :: NetworkDescription t (Event t ())
 displayEvent = do
     (addHandler, runHandlers) <- liftIO newAddHandler
     liftIO $ setDisplayHandler runHandlers
     fromAddHandler addHandler
 
 
-idleEvent :: NetworkDescription (Event ())
+idleEvent :: NetworkDescription t (Event t ())
 idleEvent = event0 idleCallback
 
-time :: NetworkDescription (Behavior Int)
+time :: NetworkDescription t (Behavior t Int)
 time = fromPoll $ get elapsedTime
 
 
