@@ -17,12 +17,13 @@ module Reactive.Banana.GLUT.Input (
 ) where
 
 import Reactive.Banana
+import Reactive.Banana.Frameworks
 import Reactive.Banana.GLUT
 import Graphics.UI.GLUT
 
 type KeyMouseInfo = (Key, KeyState, Modifiers, Position)
 
-keyMouseEvent :: NetworkDescription t (Event t KeyMouseInfo)
+keyMouseEvent ::  Frameworks t => Moment t (Event t KeyMouseInfo)
 keyMouseEvent = event4 keyboardMouseCallback
 
 keyPressed :: Key -> Event t KeyMouseInfo -> Event t KeyMouseInfo

@@ -2,6 +2,7 @@ import Graphics.Rendering.OpenGL
 import Graphics.UI.GLUT
 import Data.IORef
 import Reactive.Banana
+import Reactive.Banana.Frameworks
 import Reactive.Banana.GLUT
 import Reactive.Banana.GLUT.Input
 import Reactive.Banana.GLUT.Util
@@ -40,6 +41,7 @@ createGLWindow windowTitle width height fullscreen = do
     initialDisplayMode $= [DoubleBuffered, RGBAMode,
         WithDepthBuffer,WithStencilBuffer, WithAlphaComponent]
     createWindow windowTitle
+    perWindowKeyRepeat $= PerWindowKeyRepeatOff
     windowSize $= Size width height
     actionOnWindowClose $= Exit
     when fullscreen fullScreen
@@ -51,8 +53,24 @@ initGL = do
     depthFunc $= Just Lequal
     hint PerspectiveCorrection $= Nicest
 
-main = do
+stateKeyEvents :: Event t KeyMouseInfo -> Behavior t AnimationState -> Event t AnimationState
+stateKeyEvents ekeymouse bstate = einctri `union` edectri
+                `union` einccube `union` edeccube
+                `union` epause
+    where
+        -- key events that change the state
+        ef2 = noModifier $ keyPressed (SpecialKey KeyF2) ekeymouse
+        ef3 = noModifier $ keyPressed (SpecialKey KeyF3) ekeymouse
+        ef4 = noModifier $ keyPressed (SpecialKey KeyF4) ekeymouse
+        ef5 = noModifier $ keyPressed (SpecialKey KeyF5) ekeymouse
+        ekeyp = noModifier $ keyPressed (Char 'p') ekeymouse
+        einctri = injectB (incTriangle <$> bstate) ef2
+        edectri = injectB (decTriangle <$> bstate) ef3
+        einccube = injectB (incCube <$> bstate) ef4
+        edeccube = injectB (decCube <$> bstate) ef5
+        epause = injectB (switchPause <$> bstate) ekeyp
 
+main = do
     getArgsAndInitialize
     createGLWindow "Test" 640 480 False
     initGL
@@ -64,14 +82,9 @@ main = do
         edisplay <- displayEvent
         eidle <- idleEvent
         let
-            -- key events
-            eesc = noModifier $ keyPressed (Char '\ESC') ekeymouse
+            -- key events for windows
             ef1 = noModifier $ keyPressed (SpecialKey KeyF1) ekeymouse
-            ef2 = noModifier $ keyPressed (SpecialKey KeyF2) ekeymouse
-            ef3 = noModifier $ keyPressed (SpecialKey KeyF3) ekeymouse
-            ef4 = noModifier $ keyPressed (SpecialKey KeyF4) ekeymouse
-            ef5 = noModifier $ keyPressed (SpecialKey KeyF5) ekeymouse
-            ekeyp = noModifier $ keyPressed (Char 'p') ekeymouse
+            eesc = noModifier $ keyPressed (Char '\ESC') ekeymouse
 
             -- idle event every 15ms containing current time
             eidletick = filterInc (apply (const <$> btime) eidle) 15
@@ -81,18 +94,11 @@ main = do
             erepaint = edisplaytick `union` eidletick
 
             -- all events that change the state
-            einctri = injectB (incTriangle <$> bstate) ef2
-            edectri = injectB (decTriangle <$> bstate) ef3
-            einccube = injectB (incCube <$> bstate) ef4
-            edeccube = injectB (decCube <$> bstate) ef5
             eanim = apply (calcRotation <$> bstate) erepaint
-            epause = injectB (switchPause <$> bstate) ekeyp
 
             -- combine all state changing events
             estatechanged = eanim
-                `union` einctri `union` edectri
-                `union` einccube `union` edeccube
-                `union` epause
+                `union` stateKeyEvents ekeymouse bstate
             -- behavior with current state
             bstate = stepper state estatechanged
 

@@ -23,6 +23,7 @@ The following interactions are possible:
 * `F3` - Increase pyramid rotation speed
 * `F4` - Decrease cube rotation speed
 * `F5` - Increase cube rotation speed
+* `p` - Pause/Restart animation
 
 [reactive-banana]: http://www.haskell.org/haskellwiki/Reactive-banana
 [GLUT]: http://hackage.haskell.org/package/GLUT 
